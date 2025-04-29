@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home Visit Request</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<script type="module" src="js/logout.js"></script>
+  <script type="module" src="js/firebaseauth.js"></script>
+  <header class="fixed top-0 left-0 w-full z-50 bg-white/95 backdrop-blur-sm shadow-lg">
+    <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+      <!-- Logo -->
+      <a href="homepage.html" class="flex items-center">
+        <img src="images/MED.png" class="h-12 w-auto" alt="Medi Home Logo">
+      </a>
+  
+      <!-- Navigation Links -->
+      <ul class="hidden md:flex items-center space-x-8 text-base font-medium">
+        <li><a href="homepage.html" class="text-gray-700 hover:text-blue-600 transition duration-300">Home</a></li>
+        <li><a href="services.html" class="text-gray-700 hover:text-blue-600 transition duration-300">Services</a></li>
+        <li><a href="#about" class="text-gray-700 hover:text-blue-600 transition duration-300">About</a></li>
+        <li><a href="#contact" class="text-gray-700 hover:text-blue-600 transition duration-300">Contact</a></li>
+        <li><a href="#Doctors" class="text-gray-700 hover:text-blue-600 transition duration-300">Doctors</a></li>
+      </ul>
+  
+      <!-- Auth Buttons -->
+      <div class="hidden md:flex items-center space-x-4">
+        <a href="register.html" class="px-4 py-2 text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition duration-300" id="loginBtn">Login</a>
+        <a class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300" id="logoutBtn" onclick="logout()" style="display: none;">Logout</a>
+        <script>
+          document.addEventListener('DOMContentLoaded', () => {
+            const loginBtn = document.getElementById('loginBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const mobileLoginBtn = document.getElementById('mobileLoginBtn');
+            const mobileLogoutBtn = document.getElementById('mobileLogoutBtn');
+        
+            const isLoggedIn = localStorage.getItem('loggedIn');
+        
+            // Initial toggle based on login state
+            if (isLoggedIn === 'true') {
+              loginBtn.style.display = 'none';
+              logoutBtn.style.display = 'inline-block';
+              mobileLoginBtn.style.display = 'none';
+              mobileLogoutBtn.style.display = 'inline-block';
+            } else {
+              loginBtn.style.display = 'inline-block';
+              logoutBtn.style.display = 'none';
+              mobileLoginBtn.style.display = 'inline-block';
+              mobileLogoutBtn.style.display = 'none';
+            }
+        
+            // Simulate login
+            [loginBtn, mobileLoginBtn].forEach(btn => {
+              btn.addEventListener('click', () => {
+                localStorage.setItem('loggedIn', 'true');
+                loginBtn.style.display = 'none';
+                logoutBtn.style.display = 'inline-block';
+                mobileLoginBtn.style.display = 'none';
+                mobileLogoutBtn.style.display = 'inline-block';
+              });
+            });
+        
+            // Simulate logout
+            [logoutBtn, mobileLogoutBtn].forEach(btn => {
+              btn.addEventListener('click', () => {
+                localStorage.removeItem('loggedIn');
+                loginBtn.style.display = 'inline-block';
+                logoutBtn.style.display = 'none';
+                mobileLoginBtn.style.display = 'inline-block';
+                mobileLogoutBtn.style.display = 'none';
+              });
+            });
+          });
+        </script>
+      </div>
+  
+      <!-- Mobile Auth and Menu Buttons -->
+      <div class="md:hidden flex items-center space-x-2">
+        <a href="register.html" class="px-3 py-1 text-sm text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition duration-300" id="mobileLoginBtn">Login</a>
+        <a class="px-3 py-1 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300" id="mobileLogoutBtn" onclick="logout()" style="display: none;">Logout</a>
+        <button id="menu-btn" class="p-2 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300">
+          <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </nav>
+  
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+      <div class="container mx-auto px-4 py-4">
+        <ul class="space-y-3">
+          <li><a href="homepage.html" class="block py-2 text-base font-medium text-gray-700 hover:text-blue-600 transition duration-300">Home</a></li>
+          <li><a href="services.html" class="block py-2 text-base font-medium text-gray-700 hover:text-blue-600 transition duration-300">Services</a></li>
+          <li><a href="#about" class="block py-2 text-base font-medium text-gray-700 hover:text-blue-600 transition duration-300">About</a></li>
+          <li><a href="#contact" class="block py-2 text-base font-medium text-gray-700 hover:text-blue-600 transition duration-300">Contact</a></li>
+          <li><a href="#Doctors" class="block py-2 text-base font-medium text-gray-700 hover:text-blue-600 transition duration-300">Doctors</a></li>
+          <li><a href="register.html" class="block py-2 text-base font-medium text-blue-600 hover:text-blue-800 transition duration-300">Login</a></li>
+          <li><a id="logout-btn" href="javascript:void(0);" onclick="logoutUser()" class="block py-2 text-base font-medium text-red-600 hover:text-red-800 transition duration-300" style="display: none;">Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+<script>
+  const btn = document.getElementById('menu-btn');
+  const menu = document.getElementById('mobile-menu');
+
+  btn.addEventListener('click', () => {
+    menu.classList.toggle('hidden');
+  });
+</script>
+<body class="bg-gray-100 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+  <section>
+<!-- Appointment Form --> 
+    <div class="bg-white/90 backdrop-blur-sm shadow-lg rounded-lg p-6 max-w-2xl mx-auto mb-8"> 
+      <h2 class="text-2xl font-semibold text-blue-800 mb-4 text-center">Request Home Visit</h2> 
+      <form id="appointmentForm" class="grid grid-cols-1 md:grid-cols-2 gap-4"> 
+        
+        <!-- Category     and Message --> 
+        <div class="md:col-span-2"> 
+          <label for="category" class="block text-sm font-medium text-gray-700">Select Category <span class="text-red-500">*</span></label> 
+          <select id="category" name="category" class="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required> 
+            <option value="">-- Choose Service --</option> 
+            <option value="Physiotherapy">Physiotherapy</option> 
+            <option value="General Home Care">General Home Care</option> 
+            <option value="Pediatrics">Pediatrics</option> 
+            <option value="Cardiology">Cardiology</option> 
+            <option value="Mental Health Care">Mental Health Care</option> 
+            <option value="Elderly Care">Elderly Care</option> 
+            <option value="Respiratory Care">Respiratory Care</option> 
+            <option value="Post-Surgery Care">Post-Surgery Care</option> 
+          </select> 
+        </div> 
+    
+        <div class="md:col-span-2"> 
+          <label for="message" class="block text-sm font-medium text-gray-700">Your Message <span class="text-red-500">*</span></label> 
+          <textarea id="message" name="message" rows="4" class="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Please write your message here" required></textarea> 
+        </div> 
+    
+        <!-- Personal Information --> 
+        <div> 
+          <label for="name" class="block text-sm font-medium text-gray-700">Name <span class="text-red-500">*</span></label> 
+          <input type="text" id="name" name="name" class="w-full p-2 text-sm border border-gray-300 rounded-lg" required> 
+        </div> 
+    
+        <div> 
+          <label for="email" class="block text-sm font-medium text-gray-700">Email <span class="text-red-500">*</span></label> 
+          <input type="email" id="email" name="email" class="w-full p-2 text-sm border border-gray-300 rounded-lg" required> 
+        </div> 
+    
+        <div> 
+          <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number <span class="text-red-500">*</span></label> 
+          <input type="tel" id="phone" name="phone" class="w-full p-2 text-sm border border-gray-300 rounded-lg" required> 
+        </div> 
+    
+        <div> 
+          <label for="location" class="block text-sm font-medium text-gray-700">Location <span class="text-red-500">*</span></label> 
+          <input type="text" id="location" name="location" class="w-full p-2 text-sm border border-gray-300 rounded-lg" required> 
+        </div> 
+    
+        <!-- Appointment Details --> 
+        <div> 
+          <label for="appointment_date" class="block text-sm font-medium text-gray-700">Preferred Date <span class="text-red-500">*</span></label> 
+          <input type="date" id="appointment_date" name="appointment_date" class="w-full p-2 text-sm border border-gray-300 rounded-lg" required> 
+        </div> 
+    
+        <div> 
+          <label for="appointment_time" class="block text-sm font-medium text-gray-700">Preferred Time <span class="text-red-500">*</span></label> 
+          <input type="time" id="appointment_time" name="appointment_time" class="w-full p-2 text-sm border border-gray-300 rounded-lg" required> 
+        </div> 
+    
+        <!-- Terms and Submit --> 
+        <div class="md:col-span-2 flex items-center justify-between space-x-4"> 
+          <div class="flex items-center"> 
+            <input type="checkbox" id="terms" required class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"> 
+            <label for="terms" class="ml-2 text-sm text-gray-700">I agree with the terms</label> 
+          </div> 
+          <button type="submit" class="bg-blue-600 text-white py-2 px-4 text-sm rounded-lg hover:bg-blue-700 transition">Send Request</button> 
+        </div> 
+      </form> 
+    </div> 
+
+    <script>
+      // Function to show error for a field
+      function showError(element, message) {
+        element.classList.add('border-red-500');
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'text-red-500 text-xs mt-1';
+        errorDiv.textContent = message;
+        element.parentNode.appendChild(errorDiv);
+      }
+
+      // Function to clear all errors
+      function clearErrors() {
+        document.querySelectorAll('.text-red-500.text-xs').forEach(el => el.remove());
+        document.querySelectorAll('.border-red-500').forEach(el => el.classList.remove('border-red-500'));
+      }
+
+      document.getElementById("appointmentForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const form = e.target;
+        const submitButton = form.querySelector('button[type="submit"]');
+        const originalButtonText = submitButton.textContent;
+
+        // Clear previous errors
+        clearErrors();
+
+        // Get form data first
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData);
+        
+        // Client-side validation
+        const requiredFields = [
+          { id: 'category', label: 'Category' },
+          { id: 'message', label: 'Message' },
+          { id: 'name', label: 'Name' },
+          { id: 'email', label: 'Email' },
+          { id: 'phone', label: 'Phone Number' },
+          { id: 'location', label: 'Location' },
+          { id: 'appointment_date', label: 'Preferred Date' },
+          { id: 'appointment_time', label: 'Preferred Time' }
+        ];
+
+        let hasErrors = false;
+        // Only validate empty fields if they haven't been filled
+        requiredFields.forEach(field => {
+          const element = document.getElementById(field.id);
+          const value = data[field.id];
+          if (!value || !value.trim()) {
+            showError(element, `${field.label} is required`);
+            hasErrors = true;
+          }
+        });
+
+        // Validate email format
+        const emailElement = document.getElementById('email');
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(emailElement.value.trim())) {
+          showError(emailElement, 'Please enter a valid email address');
+          hasErrors = true;
+        }
+
+        // Validate terms checkbox
+        const termsCheckbox = document.getElementById('terms');
+        if (!termsCheckbox.checked) {
+          termsCheckbox.classList.add('border-red-500');
+          showError(termsCheckbox, 'Please agree to the terms before submitting');
+          hasErrors = true;
+        }
+
+        if (hasErrors) {
+          return;
+        }
+
+        // Disable form and show loading state
+        submitButton.disabled = true;
+        submitButton.textContent = 'Sending...';
+        Array.from(form.elements).forEach(element => element.disabled = true);
+
+        if (hasErrors) {
+          return;
+        }
+
+        try {
+          const response = await fetch('http://localhost:5502/api/book-appointment', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+            alert('Appointment request sent successfully!');
+            form.reset();
+          } else {
+            const errorMessage = result.error || 'Failed to send appointment request. Please check your information and try again.';
+            alert(errorMessage);
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('Network error occurred. Please check your internet connection and try again.');
+        } finally {
+          // Re-enable form
+          submitButton.disabled = false;
+          submitButton.textContent = originalButtonText;
+          Array.from(form.elements).forEach(element => element.disabled = false);
+        }
+      });
+    </script>
+  </section>
+  
+<!-- Services Showcase Section -->
+<section class="container mx-auto px-4 py-8 mb-8 bg-white/90 backdrop-blur-sm rounded-xl shadow-lg">
+    <div class="max-w-4xl mx-auto px-6 py-8 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg mb-12">
+      <div class="relative">
+        <h2 class="text-4xl font-bold text-center text-blue-800 mb-4">Learn what to expect after booking</h2>
+        <div class="w-32 h-1 bg-gradient-to-r from-blue-500 to-blue-700 mx-auto rounded-full"></div>
+      </div>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Physiotherapy Service Card -->
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+        <div class="p-6">
+          <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
+            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-800 mb-2">Physiotherapy</h3>
+          <p class="text-gray-600 mb-4">Expert physical rehabilitation in your home. Personalized treatment for injuries, chronic pain, and post-surgery recovery.</p>
+          <div class="bg-gray-50 p-4 rounded-lg mb-4">
+            <h4 class="font-semibold text-gray-700 mb-2">What to Expect:</h4>
+            <ul class="text-sm text-gray-600 space-y-2">
+              <li>• Initial assessment (60-90 minutes)</li>
+              <li>• Follow-up sessions (45-60 minutes)</li>
+              <li>• Wear comfortable, loose clothing</li>
+              <li>• Clear space for exercises</li>
+            </ul>
+          </div>
+          <ul class="text-sm text-gray-500 mb-4">
+            <li class="flex items-center mb-2">✓ Customized exercise programs</li>
+            <li class="flex items-center mb-2">✓ Manual therapy techniques</li>
+            <li class="flex items-center">✓ Progress monitoring</li>
+          </ul>
+          <p class="text-sm font-medium text-blue-600">Starting from KSH 1,340/session</p>
+        </div>
+      </div>
+  
+      <!-- General Home Care Card -->
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+        <div class="p-6">
+          <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-800 mb-2">General Home Care</h3>
+          <p class="text-gray-600 mb-4">Comprehensive medical care delivered to your doorstep. Professional nursing and medical support for all ages.</p>
+          <div class="bg-gray-50 p-4 rounded-lg mb-4">
+            <h4 class="font-semibold text-gray-700 mb-2">What to Expect:</h4>
+            <ul class="text-sm text-gray-600 space-y-2">
+              <li>• Regular visits (30-60 minutes)</li>
+              <li>• Health assessment & monitoring</li>
+              <li>• Have medical history ready</li>
+              <li>• List current medications</li>
+            </ul>
+          </div>
+          <ul class="text-sm text-gray-500 mb-4">
+            <li class="flex items-center mb-2">✓ Vital signs monitoring</li>
+            <li class="flex items-center mb-2">✓ Medication management</li>
+            <li class="flex items-center">✓ Wound care</li>
+          </ul>
+          <p class="text-sm font-medium text-green-600">Starting from KSH 1,755/visit</p>
+        </div>
+      </div>
+  
+      <!-- Pediatrics Card -->
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+        <div class="p-6">
+          <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-4">
+            <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-800 mb-2">Pediatrics</h3>
+          <p class="text-gray-600 mb-4">Specialized medical care for children in the comfort of your home. Expert pediatricians and child health services.</p>
+          <div class="bg-gray-50 p-4 rounded-lg mb-4">
+            <h4 class="font-semibold text-gray-700 mb-2">What to Expect:</h4>
+            <ul class="text-sm text-gray-600 space-y-2">
+              <li>• Visits last 30-45 minutes</li>
+              <li>• Child's vaccination records needed</li>
+              <li>• Growth & development check</li>
+              <li>• Comfortable environment for child</li>
+            </ul>
+          </div>
+          <ul class="text-sm text-gray-500 mb-4">
+            <li class="flex items-center mb-2">✓ Well-child visits</li>
+            <li class="flex items-center mb-2">✓ Vaccinations</li>
+            <li class="flex items-center">✓ Growth monitoring</li>
+          </ul>
+          <p class="text-sm font-medium text-purple-600">Starting from KSH 2,925/visit</p>
+        </div>
+      </div>
+  
+      <!-- Cardiology Card -->
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+        <div class="p-6">
+          <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
+            <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-800 mb-2">Cardiology</h3>
+          <p class="text-gray-600 mb-4">Professional cardiac care at home. Regular monitoring and management of heart conditions.</p>
+          <div class="bg-gray-50 p-4 rounded-lg mb-4">
+            <h4 class="font-semibold text-gray-700 mb-2">What to Expect:</h4>
+            <ul class="text-sm text-gray-600 space-y-2">
+              <li>• Consultation (45-60 minutes)</li>
+              <li>• Bring previous cardiac records</li>
+              <li>• Current medication list required</li>
+              <li>• Wear comfortable clothing</li>
+            </ul>
+          </div>
+          <ul class="text-sm text-gray-500 mb-4">
+            <li class="flex items-center mb-2">✓ ECG monitoring</li>
+            <li class="flex items-center mb-2">✓ Blood pressure checks</li>
+            <li class="flex items-center">✓ Medication review</li>
+          </ul>
+          <p class="text-sm font-medium text-red-600">Starting from KSH 920/visit</p>
+        </div>
+      </div>
+      <!-- Mental Health Care Card -->
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+        <div class="p-6">
+          <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mb-4">
+            <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0012 18.75V22"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-800 mb-2">Mental Health Care</h3>
+          <p class="text-gray-600 mb-4">Professional mental health support in the comfort of your home. Expert counseling and therapy services.</p>
+          <div class="bg-gray-50 p-4 rounded-lg mb-4">
+            <h4 class="font-semibold text-gray-700 mb-2">What to Expect:</h4>
+            <ul class="text-sm text-gray-600 space-y-2">
+              <li>• Sessions last 50-60 minutes</li>
+              <li>• Private, quiet space needed</li>
+              <li>• Initial assessment first</li>
+              <li>• Confidential environment</li>
+            </ul>
+          </div>
+          <ul class="text-sm text-gray-500 mb-4">
+            <li class="flex items-center mb-2">✓ Individual counseling</li>
+            <li class="flex items-center mb-2">✓ Anxiety management</li>
+            <li class="flex items-center">✓ Depression support</li>
+          </ul>
+          <p class="text-sm font-medium text-yellow-600">Starting from KSH900/session</p>
+        </div>
+      </div>
+  
+      <!-- Elderly Care Card -->
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+        <div class="p-6">
+          <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mb-4">
+            <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-800 mb-2">Elderly Care</h3>
+          <p class="text-gray-600 mb-4">Compassionate care for seniors at home. Comprehensive support for daily activities and medical needs.</p>
+          <div class="bg-gray-50 p-4 rounded-lg mb-4">
+            <h4 class="font-semibold text-gray-700 mb-2">What to Expect:</h4>
+            <ul class="text-sm text-gray-600 space-y-2">
+              <li>• Initial care assessment (1-2 hours)</li>
+              <li>• Regular visits as scheduled</li>
+              <li>• Medical history documentation</li>
+              <li>• Home safety evaluation</li>
+            </ul>
+          </div>
+          <ul class="text-sm text-gray-500 mb-4">
+            <li class="flex items-center mb-2">✓ Personal care assistance</li>
+            <li class="flex items-center mb-2">✓ Medication management</li>
+            <li class="flex items-center">✓ Mobility support</li>
+          </ul>
+          <p class="text-sm font-medium text-indigo-600">Starting from KSH 750/hour</p>
+        </div>
+      </div>
+  
+      <!-- Respiratory Care Card -->
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+        <div class="p-6">
+          <div class="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mb-4">
+            <svg class="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-800 mb-2">Respiratory Care</h3>
+          <p class="text-gray-600 mb-4">Specialized respiratory therapy and treatment at home. Expert care for breathing difficulties.</p>
+          <div class="bg-gray-50 p-4 rounded-lg mb-4">
+            <h4 class="font-semibold text-gray-700 mb-2">What to Expect:</h4>
+            <ul class="text-sm text-gray-600 space-y-2">
+              <li>• Treatment sessions (40-60 minutes)</li>
+              <li>• Pulmonary function assessment</li>
+              <li>• Bring respiratory medical history</li>
+              <li>• Well-ventilated space needed</li>
+            </ul>
+          </div>
+          <ul class="text-sm text-gray-500 mb-4">
+            <li class="flex items-center mb-2">✓ Breathing exercises</li>
+            <li class="flex items-center mb-2">✓ Oxygen therapy</li>
+            <li class="flex items-center">✓ COPD management</li>
+          </ul>
+          <p class="text-sm font-medium text-teal-600">Starting from KSH 500/visit</p>
+        </div>
+      </div>
+  
+      <!-- Post-Surgery Care Card -->
+      <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+        <div class="p-6">
+          <div class="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mb-4">
+            <svg class="w-8 h-8 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-800 mb-2">Post-Surgery Care</h3>
+          <p class="text-gray-600 mb-4">Comprehensive post-operative care at home. Professional support for recovery and rehabilitation.</p>
+          <div class="bg-gray-50 p-4 rounded-lg mb-4">
+            <h4 class="font-semibold text-gray-700 mb-2">What to Expect:</h4>
+            <ul class="text-sm text-gray-600 space-y-2">
+              <li>• Care visits (30-45 minutes)</li>
+              <li>• Surgical discharge papers needed</li>
+              <li>• Clean, accessible environment</li>
+              <li>• Follow surgeon's instructions</li>
+            </ul>
+          </div>
+          <ul class="text-sm text-gray-500 mb-4">
+            <li class="flex items-center mb-2">✓ Wound care</li>
+            <li class="flex items-center mb-2">✓ Pain management</li>
+            <li class="flex items-center">✓ Recovery monitoring</li>
+          </ul>
+          <p class="text-sm font-medium text-pink-600">Starting from KSH 710/visit</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  
+   </div>
+    </section>
+    <script type="module" src="js/authentication.js"></script>
+  
+  
+</body>
+</html>
